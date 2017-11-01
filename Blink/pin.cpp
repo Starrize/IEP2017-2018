@@ -1,30 +1,35 @@
 #include "pin.h"
+#include "bcm2835.h"
 
-Pin::Pin(int pinNr)
+Pin::Pin(int pinNr, int direction, int state)
 {
-     this->pinNr = pinNr;
+          this->pinNr=pinNr;
+          this->direction=direction;
+          this->state=state;
+          bcm2835_gpio_fsel(pinNr, direction);
 }
-Pin::get(){
-    return bcm2835_gpio_lev(pinNr);
-}
-Pin::set(int highlow){
-    /**
-    * 1 - input
-    * 0 - output
-    *
-    */
-    if(direction == 1){
 
+void Pin::set(int p){
+     if(this->direction==0){
+          bcm2835_gpio_write(this->pinNr, p);
+     }
+}
+
+int Pin::get(){
+     int res;
+    if(this->direction == 0){
+        res = this->state;
     }
     else{
-       if(highlow == 0){
-            bcm2835_gpio_clr(pinNr);
-       }
-       else{
-           bcm2835_gpio_set(pinNr);
-       }
+        res  = bcm2835_gpio_lev(this->pinNr);
     }
+    return res;
 }
-Pin::changeDirection(int pud){
-    void bcm2835_gpio_set_pud(pinNr, pud);
+void Pin::change(){
+    if(this->direction==0){
+        bcm2835_gpio_fsel(this->pinNr, BCM2835_GPIO_FSEL_INPT);
+    }
+    else{
+        bcm2835_gpio_fsel(this->pinNr, BCM2835_GPIO_FSEL_OUTP);
+    }
 }
