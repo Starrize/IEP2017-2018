@@ -15,11 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
     bcm2835_stub.cpp \
     pin.cpp \
-    pwm.cpp
+    pwm.cpp \
+    spi.cpp \
+    serial.cpp
 
 HEADERS  += \
     bcm2835.h \
     pin.h \
-    pwm.h
+    pwm.h \
+    spi.h \
+    serial.h
 
 FORMS    += blink.ui
